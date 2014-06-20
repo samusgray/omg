@@ -1,16 +1,14 @@
 {
-  "name"          : "underscore",
-  "description"   : "JavaScript's functional programming helper library.",
-  "homepage"      : "http://github.com/mragra/omg",
+  "name"          : "omg",
+  "description"   : "Object-Relation Mapping for HTML5 Local Storage",
+  "homepage"      : "http://github.com/mragray/omg",
   "keywords"      : ["util", "local", "storage", "client", "browser"],
-  "author"        : "Aaron Gray <aaron@hellometa.org>",
+  "author"        : "Aaron Gray <aaron@hellometa.com>",
   "repository"    : {"type": "git", "url": "git://github.com/mragray/omg.git"},
   "main"          : "omg.js",
   "version"       : "0.5.0",
   "devDependencies": {
-    "docco": "0.6.x",
-    "phantomjs": "1.9.0-1",
-    "uglify-js": "2.4.x"
+  
   },
   "licenses": [
     {
@@ -18,5 +16,5 @@
       "url": "https://raw.github.com/mragray/omg/master/LICENSE"
     }
   ],
-  "files"         : ["omg.js", "omg.min.js", "LICENSE"]
+  "files"         : ["omg.js", "LICENSE"]
 }

@@ -1,35 +1,11 @@
 //     OMG.js 0.5.0
 //     (c) 2014 Aaron Gray
-//     OMG may be freely distributed under the MIT license.
+//     OMG.js may be freely distributed under the MIT license.
 
 (function(ns){
 'use strict';
-    // -- Complete:
-    // Create Collection: 
-    //   omg.create('People');
-    // Create Collection with seed data: 
-    //   omg.create('People', [{id: 5, name: 'Link'}, {id: 6, name: 'Zelda'}]);
-    // Delete Collection: 
-    //   omg.delete('People');
-    // Add new object (or array of objects) to Collection: 
-    //   omg.add('People', {id: 5, name: 'Navi'});
-    // Get item from storage by ID: 
-    //   omg.getOne('People', 1)
-    // Get prop on specific object: 
-    //   omg.getOne('People', 5).name => 'Aaron'
-    //
-    // -- To Do Now:
-    // Generate unique ID
-    // Update single property in object
-    // set prop on specific object
-    // Set event handeler on localstorage
-    // 
-    // -- To Do later:
-    // Rename collection
-    // Extend omg.on to trigger callbacks
-    // Pollyfil for local storage on legacy browsers 
 
-    // Test for local storage support.
+    // Boolean to test for local storage support.
     var storageSupport = function() {
         try {
             return 'localStorage' in window && window.localStorage !== null;
@@ -38,39 +14,23 @@
         }
     };
 
+    // If local storage is not supported...
     if (!storageSupport()) {
         console.log('Local storage is not supported! Pollyfil coming soon!');
+        // Just give up.
         return false;
     }
 
-    //handler cache
+    // Handler cache
     var handlers = {};
     
+    // (incomplete) This will be where we auto-increment unique id's. See ToDo in readme.
     var defaultProperties = {
         id: 1,
         ts: Date.now()
     };
 
-    function executeHandlers(eventName){
-        //get all handlers with the selected name
-        var handler = handlers[eventName] || [],
-            len = handler.length,
-            i;
-        //execute each
-        for(i = 0; i< len; i++){
-            handler[i].apply(this,[]);
-        }
-    }
-
-    ns.has = function(collection){
-        var collectionString = localStorage.getItem(collection);
-        if (collectionString) {
-            return true;
-        } else {
-            return false;
-        }
-    };
-
+    // Common errors.
     var _omgError = function(type, context) {
         switch (type) {
           case '100':
@@ -87,16 +47,38 @@
             break;
         }
     };
+    
+    function executeHandlers(eventName){
+        //get all handlers with the selected name
+        var handler = handlers[eventName] || [],
+            len = handler.length,
+            i;
+        //execute each
+        for(i = 0; i< len; i++){
+            handler[i].apply(this,[]);
+        }
+    }
 
-    //our on function which collects handlers
+    // (incomplete) Register callback functions for omg events.
     ns.on = function(eventName,handler){
-        //if no handler collection exists, create one
+        // If no handler collection exists, create one!
         if(!handlers[eventName]){
             handlers[eventName] = [];
         }
         handlers[eventName].push(handler);
     };
 
+    // Boolean to check if a collection exsists.
+    ns.has = function(collection){
+        var collectionString = localStorage.getItem(collection);
+        if (collectionString) {
+            return true;
+        } else {
+            return false;
+        }
+    };    
+
+    // Returns the contents of a collection as an array of objects.
     ns.get = function(collection){
         if (ns.has(collection)) {
             var collectionString = localStorage.getItem(collection);
@@ -107,6 +89,7 @@
         }
     };
 
+    // Returns a single object based on ID.
     ns.getOne = function(collection, objectID){
         if (ns.has(collection)) {
             var objects = ns.get(collection),
@@ -121,6 +104,7 @@
         }
     };
 
+    // Creates a new collection if it doesn't already exsist.
     ns.create = function(collection, objectData){
         if (!ns.has(collection)) {
             if (objectData) {
@@ -133,6 +117,7 @@
         }
     };
 
+    // Add object to collection.
     ns.add = function(collection, objectData){
         if (ns.has(collection)) {
             var collectionString = localStorage.getItem(collection);
@@ -148,9 +133,9 @@
                 localStorage.setItem(collection, JSON.stringify(collectionObject));
                 return objectData;
             }
-            // If this is a single object
+            // If this is a single object...
             if ((typeof objectData == "object") && (objectData !== null) && (!Array.isArray(objectData))) {
-                // Add it to the collection object.
+                // Add it to the collection object...
                 collectionObject.push(objectData);
                 // and save to local storage.
                 localStorage.setItem(collection, JSON.stringify(collectionObject));
@@ -161,6 +146,7 @@
         }
     };
 
+    // Remove a collection from storage.
     ns.delete = function(collection){
         if (ns.has(collection)) {
             localStorage.removeItem(collection);
@@ -168,5 +154,4 @@
             _omgError('100', 'delete()');
         }
     };
-
 }(this.omg = this.omg || {}));
