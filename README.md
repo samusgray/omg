@@ -10,7 +10,7 @@ omg.create('People');
 
 ### Create Collection with seed data
 ```javascript
-omg.create('People', {id: 6, name: 'Zelda'});
+omg.create('People', {name: 'Zelda'});
 ```
 
 or
@@ -31,7 +31,7 @@ omg.deleteOne('People', '_xrtfghn09');
 
 ### Add new object (or array of objects) to Collection
 ```javascript
-omg.add('People', {id: 5, name: 'Navi'});
+omg.add('People', {name: 'Navi'});
 ```
 
 ### Get an entire collection as an array of objects.
@@ -41,12 +41,12 @@ omg.get('People');
 
 ### Get a single object from a collection (by ID);
 ```javascript
-omg.getOne('People', 1);
+omg.getOne('People', '_xrtfghn09');
 ```
 
 ### Get any property from an object.
 ```javascript
-omg.getOne('People', 5).name;
+omg.getOne('People', '_xrtfghn09').name;
 ```
 
 ### Get an array of objects by property.
