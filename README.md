@@ -44,8 +44,14 @@ omg.getOne('People', 1);
 omg.getOne('People', 5).name;
 ```
 
+### Update single object in collection
+```javascript
+var person = omg.getOne('People', '_3ectmfesw');
+person.name = 'Ganon';
+omg.save('People', person);
+```
+
 ## To Do Soon
-- Generate unique ID for every object added to a collection.
 - Function to update single property in object
 ```javascript
 var midna = omg.set('People', 3).name = "Midna"; midna.save;

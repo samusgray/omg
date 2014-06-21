@@ -3,7 +3,6 @@
 //     OMG.js may be freely distributed under the MIT license.
 
 (function(ns){
-'use strict';
 
     // Boolean to test for local storage support.
     var storageSupport = function() {
@@ -28,13 +27,13 @@
     var _omgError = function(type, context) {
         switch (type) {
           case '100':
-            console.log('ORM Error 100: ', context, ' This collection does not exsist. Check your spelling or use omg.create() to make a new collection.');
+            console.log('omg! Error 100: ', context, ' This collection does not exsist. Check your spelling or use omg.create() to make a new collection.');
             break;
           case '200':
-            console.log('ORM Error 200: ', context, ' This collection already exsists.');
+            console.log('omg! Error 200: ', context, ' This collection already exsists.');
             break;
           case '200':
-            console.log('ORM Error 200: ', context, ' This collection already exsists.');
+            console.log('omg! Error 200: ', context, ' This collection already exsists.');
             break;
           default:
             console.log('OH NO YOU BROKE EVERYTHING');
@@ -63,11 +62,11 @@
         return objectData;
     };
 
-    ns.newID = function(objectData) {
-        if (!objectData.id) {
-            var id = '_' + Math.random().toString(36).substr(2, 9);
+    ns.new = function(objectData) {
+        objectData.save = function(k, v) {
+            console.log('test');
         }
-        return id;
+        return objectData;
     };
 
     // (incomplete) Register callback functions for omg events.
@@ -98,6 +97,8 @@
             _omgError('100', 'get()');
             return false;
         }
+        console.log(this);
+        return this;
     };
 
     // Returns a single object based on ID.
@@ -113,6 +114,7 @@
         } else {
             _omgError('100', 'getOne()');
         }
+        return this;
     };
 
     // Add object to collection.
@@ -137,10 +139,11 @@
             }
             // and save to local storage.
             localStorage.setItem(collection, JSON.stringify(collectionObject));
-            return objectData;
+            return this;
         } else {
             _omgError('100', 'add()');
         }
+        return this;
     };
 
     // Creates a new collection if it doesn't already exsist.
@@ -155,6 +158,7 @@
         } else {
             _omgError('200', 'create()');
         }
+        return this;
     };
 
     // Remove a collection from storage.
@@ -164,6 +168,33 @@
         } else {
             _omgError('100', 'delete()');
         }
+        return this;
+    };
+
+    // Remove a collection from storage.
+    ns.deleteOne = function(collection, objectID, callback){
+        if (ns.has(collection)) {
+            var collectionData = ns.get(collection);
+            
+            for (var i = collectionData.length - 1; i >= 0; i--) {
+                if (collectionData[i].id == objectID) {
+                    console.log(collectionData[i]);
+                    collectionData.splice(i, 1);
+                }
+            };
+            ns.delete(collection);
+            var newCollection = ns.create(collection, collectionData);
+            callback(newCollection);
+        } else {
+            _omgError('100', 'delete()');
+        }
+        return this;
+    };
+
+    ns.save = function(collection, object){
+        ns.deleteOne(collection, object.id, function(newCollection) {
+            ns.add(collection, object);
+        });
     };
 
     // Delete everything.
