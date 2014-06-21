@@ -23,12 +23,6 @@
 
     // Handler cache
     var handlers = {};
-    
-    // (incomplete) This will be where we auto-increment unique id's. See ToDo in readme.
-    var defaultProperties = {
-        id: 1,
-        ts: Date.now()
-    };
 
     // Common errors.
     var _omgError = function(type, context) {
@@ -58,6 +52,23 @@
             handler[i].apply(this,[]);
         }
     }
+
+    ns.ID = function(objectData) {
+        if (!objectData.id) {
+            objectData.id = '_' + Math.random().toString(36).substr(2, 9);
+        }
+        if (!objectData.ts) {
+            objectData.ts = Date.now();
+        }
+        return objectData;
+    };
+
+    ns.newID = function(objectData) {
+        if (!objectData.id) {
+            var id = '_' + Math.random().toString(36).substr(2, 9);
+        }
+        return id;
+    };
 
     // (incomplete) Register callback functions for omg events.
     ns.on = function(eventName,handler){
@@ -104,19 +115,6 @@
         }
     };
 
-    // Creates a new collection if it doesn't already exsist.
-    ns.create = function(collection, objectData){
-        if (!ns.has(collection)) {
-            if (objectData) {
-                localStorage.setItem(collection, JSON.stringify(objectData));
-            } else {
-                localStorage.setItem(collection, '[]');
-            }
-        } else {
-            _omgError('200', 'create()');
-        }
-    };
-
     // Add object to collection.
     ns.add = function(collection, objectData){
         if (ns.has(collection)) {
@@ -127,22 +125,35 @@
             if (Array.isArray(objectData)){
                 // Add each object to the object collection as its own object.
                 objectData.forEach(function(object) {
+                    object = ns.ID(object);
                     collectionObject.push(object);
                 });
-                // Translate object to string and save in local storage.
-                localStorage.setItem(collection, JSON.stringify(collectionObject));
-                return objectData;
             }
             // If this is a single object...
             if ((typeof objectData == "object") && (objectData !== null) && (!Array.isArray(objectData))) {
+                objectData = ns.ID(objectData);
                 // Add it to the collection object...
                 collectionObject.push(objectData);
-                // and save to local storage.
-                localStorage.setItem(collection, JSON.stringify(collectionObject));
-                return objectData;
             }
+            // and save to local storage.
+            localStorage.setItem(collection, JSON.stringify(collectionObject));
+            return objectData;
         } else {
             _omgError('100', 'add()');
+        }
+    };
+
+    // Creates a new collection if it doesn't already exsist.
+    ns.create = function(collection, objectData){
+        if (!ns.has(collection)) {
+            if (objectData) {
+                localStorage.setItem(collection, '[]');
+                ns.add(collection, objectData);
+            } else {
+                localStorage.setItem(collection, '[]');
+            }
+        } else {
+            _omgError('200', 'create()');
         }
     };
 
@@ -154,4 +165,11 @@
             _omgError('100', 'delete()');
         }
     };
+
+    // Delete everything.
+    ns.flush = function(){
+        localStorage.clear()
+    };
+
 }(this.omg = this.omg || {}));
+
