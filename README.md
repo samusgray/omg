@@ -3,12 +3,12 @@
 Local storage is dope, but everything is stored as strings, so it leaves the object oriented programmer wanting. omg.js reduces lines of code by encoding and decoding objects & arrays as necessary to save and retrieve data from local storage.
 
 ## Use
-### Create Collection
+### Create an empty collection
 ```javascript
 omg.create('People');
 ```
 
-### Create Collection with seed data
+### Create a collection with seed data
 ```javascript
 omg.create('People', {name: 'Zelda'});
 ```
@@ -19,39 +19,39 @@ or
 omg.create('People', [{name: 'Link'}, {name: 'Ganon'}]);
 ```
 
-### Delete Collection
+### Delete any collection
 ```javascript
 omg.delete('People');
 ```
 
-### Delete a single object from collection.
+### Delete a single object from collection
 ```javascript
 omg.deleteOne('People', '_xrtfghn09');
 ```
 
-### Add new object (or array of objects) to Collection
+### Add new object (or array of objects) to collection
 ```javascript
 omg.add('People', {name: 'Navi'});
 ```
 
-### Get an entire collection as an array of objects.
+### Get an entire collection as an array of objects
 ```javascript
 omg.get('People');
 ```
 
-### Get a single object from a collection (by ID);
+### Get a single object from a collection (by ID)
 ```javascript
 omg.getOne('People', '_xrtfghn09');
 ```
 
-### Get any property from an object.
-```javascript
-omg.getOne('People', '_xrtfghn09').name;
-```
-
-### Get an array of objects by property.
+### Get an array of objects by property
 ```javascript
 omg.getBy('People', 'name', 'Link');
+```
+
+### Get any property from an object
+```javascript
+omg.getOne('People', '_xrtfghn09').name;
 ```
 
 ### Update single object in collection
@@ -69,7 +69,7 @@ omg.save('People', person);
 ```javascript
 omg.link('People', 'Weapons');
 ```
-#### Get Friends of People _ax4e390x
+#### Get Weapons of People _ax4e390x
 ```javascript
 omg.get('People', '_ax4e390x', 'Weapons');
 ```
@@ -79,10 +79,10 @@ omg.get('People', '_ax4e390x', 'Weapons');
 omg.get('People', 'Weapons').limit(1);
 ```
 
-#### Last / First friend
+#### Last / First Weapon
 ```javascript
-omg.get('Friends').of('People', 1).first();
-omg.get('Friends').of('People', 1).last();
+omg.get('People', '_ax4e390x', 'Weapons').first();
+omg.get('People', '_ax4e390x', 'Weapons').last();
 ```
 
 ## To Do later
