@@ -57,16 +57,16 @@ omg.save('People', person);
 
 #### Set up relationship
 ```javascript
-omg('People').have('Friends');
+omg.link('People', 'Weapons');
 ```
-#### Get Friends of People 1
+#### Get Friends of People _ax4e390x
 ```javascript
-omg.get('Friends').of('People', 1);
+omg.get('People', '_ax4e390x', 'Weapons');
 ```
 
 #### Limit return to 2
 ```javascript
-omg.get('Friends').of('People', 1).limit(1);
+omg.get('People', 'Weapons').limit(1);
 ```
 
 #### Last / First friend

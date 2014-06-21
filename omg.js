@@ -62,13 +62,6 @@
         return objectData;
     };
 
-    ns.new = function(objectData) {
-        objectData.save = function(k, v) {
-            console.log('test');
-        }
-        return objectData;
-    };
-
     // (incomplete) Register callback functions for omg events.
     ns.on = function(eventName,handler){
         // If no handler collection exists, create one!
@@ -97,8 +90,6 @@
             _omgError('100', 'get()');
             return false;
         }
-        console.log(this);
-        return this;
     };
 
     // Returns a single object based on ID.
@@ -106,7 +97,6 @@
         if (ns.has(collection)) {
             var objects = ns.get(collection),
                 lookup = {};
-            
             for (var i = 0, len = objects.length; i < len; i++) {
                 lookup[objects[i].id] = objects[i];
             }
@@ -114,8 +104,23 @@
         } else {
             _omgError('100', 'getOne()');
         }
-        return this;
     };
+
+    // Returns a array of objects based on property.
+    ns.getBy = function(collection, k, v){
+        if (ns.has(collection)) {
+            var objects = ns.get(collection),
+                lookup = [];
+            for (var i = 0, len = objects.length; i < len; i++) {
+                if (objects[i][k] == v) {
+                    lookup.push(objects[i]);
+                }
+            }
+            return lookup;
+        } else {
+            _omgError('100', 'getOne()');
+        }
+    };    
 
     // Add object to collection.
     ns.add = function(collection, objectData){
@@ -139,7 +144,6 @@
             }
             // and save to local storage.
             localStorage.setItem(collection, JSON.stringify(collectionObject));
-            return this;
         } else {
             _omgError('100', 'add()');
         }
@@ -171,14 +175,13 @@
         return this;
     };
 
-    // Remove a collection from storage.
+    // Remove an object from collection.
     ns.deleteOne = function(collection, objectID, callback){
         if (ns.has(collection)) {
             var collectionData = ns.get(collection);
             
             for (var i = collectionData.length - 1; i >= 0; i--) {
                 if (collectionData[i].id == objectID) {
-                    console.log(collectionData[i]);
                     collectionData.splice(i, 1);
                 }
             };
@@ -191,10 +194,22 @@
         return this;
     };
 
+    // Save an updated object to collection.
     ns.save = function(collection, object){
         ns.deleteOne(collection, object.id, function(newCollection) {
             ns.add(collection, object);
         });
+    };
+
+    // Incomplete: Assign new relationship.
+    ns.link = function(collection, hasCollection) {
+        var collectionData = ns.get(collection);
+        
+        for (var i = collectionData.length - 1; i >= 0; i--) {
+            collectionData[i][hasCollection] = [];
+        };
+        ns.delete(collection);
+        ns.create(collection, collectionData);
     };
 
     // Delete everything.
