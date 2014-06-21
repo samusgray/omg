@@ -51,6 +51,27 @@ omg.getOne('People', 5).name;
 var midna = omg.set('People', 3).name = "Midna"; midna.save;
 ```
 - Set event handeler on localstorage (trigger for any change, or specific change)
+- Map object relationships
+
+#### Set up relationship
+```javascript
+omg('People').have('Friends');
+```
+#### Get Friends of People 1
+```javascript
+omg.get('Friends').of('People', 1);
+```
+
+#### Limit return to 2
+```javascript
+omg.get('Friends').of('People', 1).limit(1);
+```
+
+#### Last / First friend
+```javascript
+omg.get('Friends').of('People', 1).first();
+omg.get('Friends').of('People', 1).last();
+```
 
 ## To Do later
 - Rename collections 
