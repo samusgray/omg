@@ -52,10 +52,6 @@ omg.save('People', person);
 ```
 
 ## To Do Soon
-- Function to update single property in object
-```javascript
-var midna = omg.set('People', 3).name = "Midna"; midna.save;
-```
 - Set event handeler on localstorage (trigger for any change, or specific change)
 - Map object relationships
 
