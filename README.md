@@ -44,6 +44,11 @@ omg.getOne('People', 1);
 omg.getOne('People', 5).name;
 ```
 
+### Get an array of objects by property.
+```javascript
+omg.getBy('People', 'name', 'Link');
+```
+
 ### Update single object in collection
 ```javascript
 var person = omg.getOne('People', '_3ectmfesw');
