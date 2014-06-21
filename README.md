@@ -16,12 +16,17 @@ omg.create('People', {id: 6, name: 'Zelda'});
 or
 
 ```
-omg.create('People', [{id: 7, name: 'Link'}, {id: 8, name: 'Ganondorf'}]);
+omg.create('People', [{name: 'Link'}, {name: 'Ganon'}]);
 ```
 
 ### Delete Collection
 ```javascript
 omg.delete('People');
+```
+
+### Delete a single object from collection.
+```javascript
+omg.deleteOne('People', '_xrtfghn09');
 ```
 
 ### Add new object (or array of objects) to Collection
@@ -51,8 +56,8 @@ omg.getBy('People', 'name', 'Link');
 
 ### Update single object in collection
 ```javascript
-var person = omg.getOne('People', '_3ectmfesw');
-person.name = 'Ganon';
+var person = omg.getBy('People', 'name', 'Ganon');
+person.name = 'Ganondorf';
 omg.save('People', person);
 ```
 
