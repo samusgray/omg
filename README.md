@@ -1,4 +1,4 @@
-# omg.js: Object-Relation Mapping for HTML5 Local Storage
+# omg.js: An object oriented interface & ORM for HTML5 Local Storage
 
 Local storage is dope, but everything is stored as strings, so it leaves the object oriented programmer wanting. omg.js reduces lines of code by encoding and decoding objects & arrays as necessary to save and retrieve data from local storage.
 
