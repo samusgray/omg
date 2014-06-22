@@ -61,8 +61,14 @@ person.name = 'Ganondorf';
 omg.save('People', person);
 ```
 
+### Run callback functions when specific omg function is called
+```javascript
+omg.on('create', function() {
+	console.log('Something was created!');
+};
+```
+
 ## To Do Soon
-- Set event handler on localstorage (trigger for any change, or specific change)
 - Map object relationships
 
 #### Set up relationship

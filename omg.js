@@ -1,4 +1,4 @@
-//     OMG.js 0.5.0
+//     OMG.js 0.5.2
 //     (c) 2014 Aaron Gray
 //     OMG.js may be freely distributed under the MIT license.
 
@@ -23,6 +23,26 @@
     // Handler cache
     var handlers = {};
 
+    function executeHandlers(eventName){
+        //get all handlers with the selected name
+        var handler = handlers[eventName] || [],
+            len = handler.length,
+            i;
+        //execute each
+        for(i = 0; i< len; i++){
+            handler[i].apply(this,[]);
+        }
+    }
+
+    // (incomplete) Register callback functions for omg events.
+    ns.on = function(eventName,handler){
+        // If no handler collection exists, create one!
+        if(!handlers[eventName]){
+            handlers[eventName] = [];
+        }
+        handlers[eventName].push(handler);
+    };
+
     // Common errors.
     var _omgError = function(type, context) {
         switch (type) {
@@ -40,17 +60,6 @@
             break;
         }
     };
-    
-    function executeHandlers(eventName){
-        //get all handlers with the selected name
-        var handler = handlers[eventName] || [],
-            len = handler.length,
-            i;
-        //execute each
-        for(i = 0; i< len; i++){
-            handler[i].apply(this,[]);
-        }
-    }
 
     ns.ID = function(objectData) {
         if (!objectData.id) {
@@ -60,15 +69,6 @@
             objectData.ts = Date.now();
         }
         return objectData;
-    };
-
-    // (incomplete) Register callback functions for omg events.
-    ns.on = function(eventName,handler){
-        // If no handler collection exists, create one!
-        if(!handlers[eventName]){
-            handlers[eventName] = [];
-        }
-        handlers[eventName].push(handler);
     };
 
     // Boolean to check if a collection exsists.
@@ -90,6 +90,7 @@
             _omgError('100', 'get()');
             return false;
         }
+        executeHandlers('get');
     };
 
     // Returns a single object based on ID.
@@ -104,6 +105,7 @@
         } else {
             _omgError('100', 'getOne()');
         }
+        executeHandlers('getOne'); 
     };
 
     // Returns a array of objects based on property.
@@ -120,6 +122,7 @@
         } else {
             _omgError('100', 'getOne()');
         }
+        executeHandlers('getBy');
     };    
 
     // Add object to collection.
@@ -147,7 +150,7 @@
         } else {
             _omgError('100', 'add()');
         }
-        return this;
+        executeHandlers('add');
     };
 
     // Creates a new collection if it doesn't already exsist.
@@ -162,7 +165,7 @@
         } else {
             _omgError('200', 'create()');
         }
-        return this;
+        executeHandlers('create');
     };
 
     // Remove a collection from storage.
@@ -172,7 +175,7 @@
         } else {
             _omgError('100', 'delete()');
         }
-        return this;
+        executeHandlers('delete');
     };
 
     // Remove an object from collection.
@@ -193,7 +196,7 @@
         } else {
             _omgError('100', 'delete()');
         }
-        return this;
+        executeHandlers('deleteOne');
     };
 
     // Save an updated object to collection.
@@ -201,6 +204,7 @@
         ns.deleteOne(collection, object.id, function(newCollection) {
             ns.add(collection, object);
         });
+        executeHandlers('save');
     };
 
     // Incomplete: Assign new relationship.
@@ -210,8 +214,11 @@
         for (var i = collectionData.length - 1; i >= 0; i--) {
             collectionData[i][hasCollection] = [];
         };
+        
         ns.delete(collection);
         ns.create(collection, collectionData);
+        
+        executeHandlers('link');
     };
 
     // Delete everything.
@@ -220,4 +227,3 @@
     };
 
 }(this.omg = this.omg || {}));
-
