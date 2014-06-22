@@ -1,8 +1,8 @@
 
 // People
-omg.create('People');
-omg.add('People', {name: 'Link'});
-omg.add('People', [{name: 'Navi'}, {name: 'Zelda'}]);
+// omg.create('People');
+// omg.add('People', {name: 'Link'});
+// omg.add('People', [{name: 'Navi'}, {name: 'Zelda'}]);
 
 var people = omg.get('People'); 
 console.table(people);

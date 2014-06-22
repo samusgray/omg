@@ -86,9 +86,9 @@ omg.get('People', '_ax4e390x', 'Weapons').last();
 ```
 
 ## To Do later
-- Rename collections 
+- Rename collections
 ```javascript
 omg.update('People', 'Characters');
 ```
+- Make delete / update functions more efficient (Calling setItem() with a named key that already exists will silently overwrite the previous value.)
 - Extend omg.on to trigger callbacks
-- Pollyfil for local storage on legacy browsers 

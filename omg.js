@@ -187,7 +187,9 @@
             };
             ns.delete(collection);
             var newCollection = ns.create(collection, collectionData);
-            callback(newCollection);
+            if (callback) {
+                callback(newCollection);
+            }
         } else {
             _omgError('100', 'delete()');
         }
