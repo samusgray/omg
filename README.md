@@ -62,7 +62,7 @@ omg.save('People', person);
 ```
 
 ## To Do Soon
-- Set event handeler on localstorage (trigger for any change, or specific change)
+- Set event handler on localstorage (trigger for any change, or specific change)
 - Map object relationships
 
 #### Set up relationship
@@ -90,5 +90,6 @@ omg.get('People', '_ax4e390x', 'Weapons').last();
 ```javascript
 omg.update('People', 'Characters');
 ```
+
 - Make delete / update functions more efficient (Calling setItem() with a named key that already exists will silently overwrite the previous value.)
 - Extend omg.on to trigger callbacks
