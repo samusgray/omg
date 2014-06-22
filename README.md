@@ -62,7 +62,7 @@ omg.save('People', person);
 ```
 
 ## To Do Soon
-- Set event handeler on localstorage (trigger for any change, or specific change)
+- Set event handler on localstorage (trigger for any change, or specific change)
 - Map object relationships
 
 #### Set up relationship
@@ -91,4 +91,4 @@ omg.get('People', '_ax4e390x', 'Weapons').last();
 omg.update('People', 'Characters');
 ```
 - Extend omg.on to trigger callbacks
-- Pollyfil for local storage on legacy browsers 
+- Polyfill for local storage on legacy browsers 
