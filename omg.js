@@ -1,4 +1,4 @@
-//     OMG.js 0.5.3
+//     OMG.js 0.5.4
 //     (c) 2014 Aaron Gray
 //     OMG.js may be freely distributed under the MIT license.
 
@@ -229,6 +229,7 @@
             ns.add(collection, collectionData);
             
             if (callback) {
+                var newCollection = ns.get(collection);
                 callback(newCollection);
             }
         } else {
