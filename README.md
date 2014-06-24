@@ -85,6 +85,7 @@ omg.on('create', function() {
 ## To Do Soon
 - Write docs for caching objects 
 - Rename caching functions to match other CRUD functions
+- only get/set on window load/unload
 
 #### Set up relationship
 ```javascript

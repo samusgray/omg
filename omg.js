@@ -13,12 +13,13 @@
         }
     };
 
-    // If local storage is not supported...
-    if (!storageSupport()) {
-        console.log('Local storage is not supported! Pollyfil coming soon!');
-        // Just give up.
-        return false;
-    }
+    ns.supported = function() {
+        try {
+            return 'localStorage' in window && window.localStorage !== null;
+        } catch (e) {
+            return false;
+        }
+    };
 
     // Handler cache
     var handlers = {};
@@ -34,8 +35,8 @@
         }
     }
 
-    // (incomplete) Register callback functions for omg events.
-    ns.on = function(eventName,handler){
+    // Register callback functions for omg events.
+    ns.on = function(eventName, handler){
         // If no handler collection exists, create one!
         if(!handlers[eventName]){
             handlers[eventName] = [];
