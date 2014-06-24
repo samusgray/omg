@@ -151,7 +151,33 @@
             _omgError('100', 'add()');
         }
         executeHandlers('add');
+        return objectData;
     };
+
+    // Add object to collection no matter what.
+    ns.addForce = function(collection, objectData){
+        var collectionString = localStorage.getItem(collection);
+        // Translate string into object
+        var collectionObject = JSON.parse(collectionString);
+        // If this is an array of objects
+        if (Array.isArray(objectData)){
+            // Add each object to the object collection as its own object.
+            objectData.forEach(function(object) {
+                object = ns.ID(object);
+                collectionObject.push(object);
+            });
+        }
+        // If this is a single object...
+        if ((typeof objectData == "object") && (objectData !== null) && (!Array.isArray(objectData))) {
+            objectData = ns.ID(objectData);
+            // Add it to the collection object...
+            collectionObject.push(objectData);
+        }
+        // and save to local storage.
+        localStorage.setItem(collection, JSON.stringify(collectionObject));
+        executeHandlers('add');
+        return objectData;
+    };    
 
     // Creates a new collection if it doesn't already exsist.
     ns.create = function(collection, objectData){
@@ -165,6 +191,17 @@
         } else {
             _omgError('200', 'create()');
         }
+        executeHandlers('create');
+    };
+
+    // Creates a new collection no matter what.
+    ns.createForce = function(collection, objectData){
+            if (objectData) {
+                localStorage.setItem(collection, '[]');
+                ns.add(collection, objectData);
+            } else {
+                localStorage.setItem(collection, '[]');
+            }
         executeHandlers('create');
     };
 
@@ -188,8 +225,9 @@
                     collectionData.splice(i, 1);
                 }
             };
-            ns.delete(collection);
-            var newCollection = ns.create(collection, collectionData);
+            ns.createForce(collection);
+            ns.add(collection, collectionData);
+            
             if (callback) {
                 callback(newCollection);
             }
@@ -223,7 +261,21 @@
 
     // Delete everything.
     ns.flush = function(){
-        localStorage.clear()
+        localStorage.clear();
+        executeHandlers('flush');
     };
+
+    omg.cache = {
+
+    };
+
+    ns.fromCache = function(collection, attr, value) {
+        var cache = ns.cache[collection];
+        for(var i = 0; i < cache.length; i += 1) {
+            if(cache[i][attr] === value) {
+                return cache[i];
+            }
+        }
+    }
 
 }(this.omg = this.omg || {}));
