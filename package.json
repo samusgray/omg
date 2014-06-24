@@ -1,12 +1,12 @@
 {
   "name"          : "omg",
-  "description"   : "An object oriented interface & ORM for HTML5 Local Storage",
+  "description"   : "omg.js is an object oriented, CRUD interface for HTML5 Local Storage.",
   "homepage"      : "http://github.com/mragray/omg",
   "keywords"      : ["util", "local", "storage", "client", "browser"],
   "author"        : "Aaron Gray <aaron@hellometa.com>",
   "repository"    : {"type": "git", "url": "git://github.com/mragray/omg.git"},
   "main"          : "omg.js",
-  "version"       : "0.5.2",
+  "version"       : "0.5.3",
   "devDependencies": {
   
   },

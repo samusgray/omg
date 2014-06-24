@@ -1,6 +1,6 @@
 {
   "name": "omg",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "main": "omg.js",
   "keywords": ["util", "local", "storage", "client", "browser"]
 }

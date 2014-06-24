@@ -1,10 +1,10 @@
 {
   "name"          : "omg",
-  "description"   : "An object oriented interface & ORM for HTML5 Local Storage",
+  "description"   : "omg.js is an object oriented, CRUD interface for HTML5 Local Storage.",
   "keywords"      : ["util", "local", "storage", "client", "browser"],
   "repo"          : "mragra/omg",
   "main"          : "omg.js",
   "scripts"       : ["omg.js"],
-  "version"       : "0.5.2",
+  "version"       : "0.5.3",
   "license"       : "MIT"
 }

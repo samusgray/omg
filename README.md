@@ -1,67 +1,81 @@
-# omg.js: An object oriented interface & ORM for HTML5 Local Storage
+# omg.js: An object oriented interface, ORM, and caching layer for HTML5 Local Storage
 
-Local storage is dope, but everything is stored as strings, so it leaves the object oriented programmer wanting. omg.js reduces lines of code by encoding and decoding objects & arrays as necessary to save and retrieve data from local storage.
+Local storage is dope, but current browser implementations only provide a UI blocking, string based interface for key-value pairs. 
+
+omg.js is an object oriented, CRUD interface for HTML5 Local Storage. It enables asynchronous read and writes with a built in caching layer for less code and better performing frontend applications.
 
 ## Use
-### Create an empty collection
+
+### Create Collections
+
+#### Create an empty collection
 ```javascript
 omg.create('People');
 ```
 
-### Create a collection with seed data
+#### Create a collection with seed data by passing an object.
 ```javascript
 omg.create('People', {name: 'Zelda'});
 ```
-
-or
-
-```
+#### or pass an array of objects.
+```javascript
 omg.create('People', [{name: 'Link'}, {name: 'Ganon'}]);
 ```
 
-### Delete any collection
-```javascript
-omg.delete('People');
-```
+### Add Objects
 
-### Delete a single object from collection
-```javascript
-omg.deleteOne('People', '_xrtfghn09');
-```
-
-### Add new object (or array of objects) to collection
+#### Add singe object (or array of objects) to collection
 ```javascript
 omg.add('People', {name: 'Navi'});
 ```
 
-### Get an entire collection as an array of objects
+### Read / Get Objects
+
+#### Get an entire collection as an array of objects
 ```javascript
 omg.get('People');
 ```
 
-### Get a single object from a collection (by ID)
+#### Get a single object from a collection (by ID)
 ```javascript
 omg.getOne('People', '_xrtfghn09');
 ```
 
-### Get an array of objects by property
+#### Get an array of objects by property
 ```javascript
 omg.getBy('People', 'name', 'Link');
 ```
 
-### Get any property from an object
+#### Get any property from an object
 ```javascript
 omg.getOne('People', '_xrtfghn09').name;
 ```
 
-### Update single object in collection
+### Delete objects
+
+#### Delete any collection
+```javascript
+omg.delete('People');
+```
+
+#### Delete a single object from collection by ID
+```javascript
+omg.deleteOne('People', '_xrtfghn09');
+```
+_omg automatically generates a unique ID for every object added to storage._
+
+### Update / Save
+
+#### Update single object in collection
 ```javascript
 var person = omg.getBy('People', 'name', 'Ganon');
 person.name = 'Ganondorf';
 omg.save('People', person);
 ```
 
-### Run callback functions when specific omg function is called
+### Callbacks
+
+#### Run callback functions when specific omg function is called
 ```javascript
 omg.on('create', function() {
 	console.log('Something was created!');
@@ -69,7 +83,8 @@ omg.on('create', function() {
 ```
 
 ## To Do Soon
-- Map object relationships
+- Write docs for caching objects 
+- Rename caching functions to match other CRUD functions
 
 #### Set up relationship
 ```javascript
