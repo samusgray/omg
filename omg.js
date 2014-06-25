@@ -1,19 +1,12 @@
-//     OMG.js 0.5.4
+//     OMG.js 0.5.6
 //     (c) 2014 Aaron Gray
 //     OMG.js may be freely distributed under the MIT license.
+
 
 (function(ns){
 
     // Boolean to test for local storage support.
-    var storageSupport = function() {
-        try {
-            return 'localStorage' in window && window.localStorage !== null;
-        } catch (e) {
-            return false;
-        }
-    };
-
-    ns.supported = function() {
+    var _storageSupport = function() {
         try {
             return 'localStorage' in window && window.localStorage !== null;
         } catch (e) {
@@ -24,7 +17,7 @@
     // Handler cache
     var handlers = {};
 
-    function executeHandlers(eventName){
+    var _executeHandlers = function(eventName){
         //get all handlers with the selected name
         var handler = handlers[eventName] || [],
             len = handler.length,
@@ -34,15 +27,6 @@
             handler[i].apply(this,[]);
         }
     }
-
-    // Register callback functions for omg events.
-    ns.on = function(eventName, handler){
-        // If no handler collection exists, create one!
-        if(!handlers[eventName]){
-            handlers[eventName] = [];
-        }
-        handlers[eventName].push(handler);
-    };
 
     // Common errors.
     var _omgError = function(type, context) {
@@ -62,6 +46,16 @@
         }
     };
 
+    // Register callback functions for omg events.
+    ns.on = function(eventName, handler){
+        // If no handler collection exists, create one!
+        if(!handlers[eventName]){
+            handlers[eventName] = [];
+        }
+        handlers[eventName].push(handler);
+    };
+
+    // Generate a unique ID for new objects.
     ns.ID = function(objectData) {
         if (!objectData.id) {
             objectData.id = '_' + Math.random().toString(36).substr(2, 9);
@@ -73,6 +67,7 @@
     };
 
     // Boolean to check if a collection exsists.
+    // TODO: Remove? Return parsed collection to avoid UI blocking.
     ns.has = function(collection){
         var collectionString = localStorage.getItem(collection);
         if (collectionString) {
@@ -84,21 +79,21 @@
 
     // Returns the contents of a collection as an array of objects.
     ns.get = function(collection){
-        if (ns.has(collection)) {
-            var collectionString = localStorage.getItem(collection);
+        var collectionString = localStorage.getItem(collection);
+        if (collectionString) {
             return JSON.parse(collectionString);
         } else {
             _omgError('100', 'get()');
             return false;
         }
-        executeHandlers('get');
+        _executeHandlers('get');
     };
 
     // Returns a single object based on ID.
     ns.getOne = function(collection, objectID){
-        if (ns.has(collection)) {
-            var objects = ns.get(collection),
-                lookup = {};
+        var objects = ns.get(collection)
+            ,lookup = {};
+        if (objects) {
             for (var i = 0, len = objects.length; i < len; i++) {
                 lookup[objects[i].id] = objects[i];
             }
@@ -106,14 +101,14 @@
         } else {
             _omgError('100', 'getOne()');
         }
-        executeHandlers('getOne'); 
+        _executeHandlers('getOne');
     };
 
     // Returns a array of objects based on property.
     ns.getBy = function(collection, k, v){
-        if (ns.has(collection)) {
-            var objects = ns.get(collection),
-                lookup = [];
+        var objects = ns.get(collection)
+            ,lookup = [];
+        if (objects) {
             for (var i = 0, len = objects.length; i < len; i++) {
                 if (objects[i][k] == v) {
                     lookup.push(objects[i]);
@@ -123,120 +118,95 @@
         } else {
             _omgError('100', 'getOne()');
         }
-        executeHandlers('getBy');
+        _executeHandlers('getBy');
     };    
 
     // Add object to collection.
-    ns.add = function(collection, objectData){
-        if (ns.has(collection)) {
-            var collectionString = localStorage.getItem(collection);
-            // Translate string into object
-            var collectionObject = JSON.parse(collectionString);
-            // If this is an array of objects
-            if (Array.isArray(objectData)){
-                // Add each object to the object collection as its own object.
-                objectData.forEach(function(object) {
-                    object = ns.ID(object);
-                    collectionObject.push(object);
-                });
+    ns.add = function(collection, newData){
+        var collectionString = localStorage.getItem(collection)
+            ,objects = JSON.parse(collectionString);
+        if (objects) {
+            // If this is an array of objects...
+            if (Array.isArray(newData)){
+                // ...add each object to the object collection as its own object.
+                for (var i = 0; i < newData.length; i++) {
+                    var object = ns.ID(newData[i]);
+                    objects.push(object);
+                }
             }
             // If this is a single object...
-            if ((typeof objectData == "object") && (objectData !== null) && (!Array.isArray(objectData))) {
-                objectData = ns.ID(objectData);
+            if ((typeof newData == "object") && (newData !== null) && (!Array.isArray(newData))) {
+                var objectData = ns.ID(newData);
                 // Add it to the collection object...
-                collectionObject.push(objectData);
+                objects.push(objectData);
             }
             // and save to local storage.
-            localStorage.setItem(collection, JSON.stringify(collectionObject));
+            localStorage.setItem(collection, JSON.stringify(objects));
+            // console.log(objects);
         } else {
             _omgError('100', 'add()');
         }
-        executeHandlers('add');
-        return objectData;
+        _executeHandlers('add');
+        return objects;
     };
 
     // Add object to collection no matter what.
-    ns.addForce = function(collection, objectData){
-        var collectionString = localStorage.getItem(collection);
-        // Translate string into object
-        var collectionObject = JSON.parse(collectionString);
+    ns.addForce = function(collection, newData){
+        var objects = [];
         // If this is an array of objects
-        if (Array.isArray(objectData)){
+        if (Array.isArray(newData)){
             // Add each object to the object collection as its own object.
-            objectData.forEach(function(object) {
-                object = ns.ID(object);
-                collectionObject.push(object);
-            });
+            for (var i = 0; i < newData.length; i++) {
+                var object = ns.ID(newData[i]);
+                objects.push(object);
+            }
         }
         // If this is a single object...
-        if ((typeof objectData == "object") && (objectData !== null) && (!Array.isArray(objectData))) {
-            objectData = ns.ID(objectData);
+        if ((typeof newData == "object") && (newData !== null) && (!Array.isArray(newData))) {
+            newData = ns.ID(newData);
             // Add it to the collection object...
-            collectionObject.push(objectData);
+            objects.push(newData);
         }
         // and save to local storage.
-        localStorage.setItem(collection, JSON.stringify(collectionObject));
-        executeHandlers('add');
-        return objectData;
+        localStorage.setItem(collection, JSON.stringify(objects));
+        _executeHandlers('add');
+        return objects;
     };    
 
     // Creates a new collection if it doesn't already exsist.
     ns.create = function(collection, objectData){
-        if (!ns.has(collection)) {
-            if (objectData) {
-                localStorage.setItem(collection, '[]');
-                ns.add(collection, objectData);
-            } else {
-                localStorage.setItem(collection, '[]');
-            }
+        if (objectData) {
+            ns.addForce(collection, objectData);
         } else {
-            _omgError('200', 'create()');
+            localStorage.setItem(collection, '[]');
         }
-        executeHandlers('create');
-    };
-
-    // Creates a new collection no matter what.
-    ns.createForce = function(collection, objectData){
-            if (objectData) {
-                localStorage.setItem(collection, '[]');
-                ns.add(collection, objectData);
-            } else {
-                localStorage.setItem(collection, '[]');
-            }
-        executeHandlers('create');
+        _executeHandlers('create');
     };
 
     // Remove a collection from storage.
     ns.delete = function(collection){
-        if (ns.has(collection)) {
-            localStorage.removeItem(collection);
-        } else {
-            _omgError('100', 'delete()');
-        }
-        executeHandlers('delete');
+        localStorage.removeItem(collection);
+        _executeHandlers('delete');
     };
 
     // Remove an object from collection.
     ns.deleteOne = function(collection, objectID, callback){
-        if (ns.has(collection)) {
-            var collectionData = ns.get(collection);
-            
-            for (var i = collectionData.length - 1; i >= 0; i--) {
-                if (collectionData[i].id == objectID) {
-                    collectionData.splice(i, 1);
+        var objects = ns.get(collection);
+        if (objects) {
+            for (var i = objects.length - 1; i >= 0; i--) {
+                if (objects[i].id == objectID) {
+                    objects.splice(i, 1);
                 }
             };
-            ns.createForce(collection);
-            ns.add(collection, collectionData);
+            var newCollection = ns.addForce(collection, objects);
             
             if (callback) {
-                var newCollection = ns.get(collection);
                 callback(newCollection);
             }
         } else {
             _omgError('100', 'delete()');
         }
-        executeHandlers('deleteOne');
+        _executeHandlers('deleteOne');
     };
 
     // Save an updated object to collection.
@@ -244,7 +214,7 @@
         ns.deleteOne(collection, object.id, function(newCollection) {
             ns.add(collection, object);
         });
-        executeHandlers('save');
+        _executeHandlers('save');
     };
 
     // Incomplete: Assign new relationship.
@@ -258,13 +228,13 @@
         ns.delete(collection);
         ns.create(collection, collectionData);
         
-        executeHandlers('link');
+        _executeHandlers('link');
     };
 
     // Delete everything.
     ns.flush = function(){
         localStorage.clear();
-        executeHandlers('flush');
+        _executeHandlers('flush');
     };
 
     omg.cache = {

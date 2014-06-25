@@ -6,7 +6,7 @@
   "author"        : "Aaron Gray <aaron@hellometa.com>",
   "repository"    : {"type": "git", "url": "git://github.com/mragray/omg.git"},
   "main"          : "omg.js",
-  "version"       : "0.5.4",
+  "version"       : "0.5.6",
   "devDependencies": {
   
   },
