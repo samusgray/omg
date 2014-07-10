@@ -1,4 +1,4 @@
-//     OMG.js 0.5.6
+//     OMG.js 0.5.7
 //     (c) 2014 Aaron Gray
 //     OMG.js may be freely distributed under the MIT license.
 
