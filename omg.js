@@ -2,9 +2,7 @@
 //     (c) 2014 Aaron Gray
 //     OMG.js may be freely distributed under the MIT license.
 
-
 (function(ns){
-
     // Boolean to test for local storage support.
     var _storageSupport = function() {
         try {
@@ -75,7 +73,7 @@
         } else {
             return false;
         }
-    };    
+    };
 
     // Returns the contents of a collection as an array of objects.
     ns.get = function(collection){
@@ -90,6 +88,7 @@
     };
 
     // Returns a single object based on ID.
+    // TODO: getOne should just call getBy and pass _id as param
     ns.getOne = function(collection, objectID){
         var objects = ns.get(collection)
             ,lookup = {};
@@ -119,7 +118,7 @@
             _omgError('100', 'getOne()');
         }
         _executeHandlers('getBy');
-    };    
+    };
 
     // Add object to collection.
     ns.add = function(collection, newData){
@@ -142,7 +141,6 @@
             }
             // and save to local storage.
             localStorage.setItem(collection, JSON.stringify(objects));
-            // console.log(objects);
         } else {
             _omgError('100', 'add()');
         }
@@ -171,7 +169,7 @@
         localStorage.setItem(collection, JSON.stringify(objects));
         _executeHandlers('add');
         return objects;
-    };    
+    };
 
     // Creates a new collection if it doesn't already exsist.
     ns.create = function(collection, objectData){
@@ -199,7 +197,7 @@
                 }
             };
             var newCollection = ns.addForce(collection, objects);
-            
+
             if (callback) {
                 callback(newCollection);
             }
@@ -220,14 +218,14 @@
     // Incomplete: Assign new relationship.
     ns.link = function(collection, hasCollection) {
         var collectionData = ns.get(collection);
-        
+
         for (var i = collectionData.length - 1; i >= 0; i--) {
             collectionData[i][hasCollection] = [];
         };
-        
+
         ns.delete(collection);
         ns.create(collection, collectionData);
-        
+
         _executeHandlers('link');
     };
 
