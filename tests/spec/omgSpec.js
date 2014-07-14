@@ -14,12 +14,9 @@ describe("Create, add, get, getBy", function() {
     var matches = omg.getBy('People', 'name', 'Link');
     expect(matches[0].name).toBe('Link');
   });
-
-
 });
 
 describe("Flush", function() {
-
   it("Should remove all items from local storage", function(){
     omg.create('People');
     omg.add('People', {name: 'Flush Me!'});
@@ -27,5 +24,4 @@ describe("Flush", function() {
     var people = omg.get('People');
     expect(people).toBe(false);
   });
-
 });
