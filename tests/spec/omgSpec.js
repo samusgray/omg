@@ -21,6 +21,11 @@ describe("Create, add, get, getBy", function() {
 describe("Flush", function() {
 
   it("Should remove all items from local storage", function(){
+    omg.create('People');
+    omg.add('People', {name: 'Flush Me!'});
+    omg.flush();
+    var people = omg.get('People');
+    expect(people).toBe(false);
   });
 
 });
