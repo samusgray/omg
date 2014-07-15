@@ -77,7 +77,7 @@
 
     // Returns the contents of a collection as an array of objects.
     ns.get = function(collection){
-        var collectionString = localStorage.getItem(collection);
+      var collectionString = localStorage.getItem(collection);
         if (collectionString) {
             return JSON.parse(collectionString);
         } else {
@@ -87,21 +87,6 @@
         _executeHandlers('get');
     };
 
-    // Returns a single object based on ID.
-    // TODO: getOne should just call getBy and pass _id as param
-    ns.getOne = function(collection, objectID){
-        var objects = ns.get(collection)
-            ,lookup = {};
-        if (objects) {
-            for (var i = 0, len = objects.length; i < len; i++) {
-                lookup[objects[i].id] = objects[i];
-            }
-            return lookup[objectID];
-        } else {
-            _omgError('100', 'getOne()');
-        }
-        _executeHandlers('getOne');
-    };
 
     // Returns a array of objects based on property.
     ns.getBy = function(collection, k, v){
@@ -120,11 +105,18 @@
         _executeHandlers('getBy');
     };
 
+    // Returns a single object based on ID.
+    ns.getOne = function(collection, objectID){
+      var one = ns.getBy(collection, 'id', objectID);
+      return one[0];
+      _executeHandlers('getOne');
+    };
+
     // Add object to collection.
     ns.add = function(collection, newData){
         var collectionString = localStorage.getItem(collection)
             ,objects = JSON.parse(collectionString);
-        if (objects) {
+          if (objects) {
             // If this is an array of objects...
             if (Array.isArray(newData)){
                 // ...add each object to the object collection as its own object.
@@ -146,7 +138,7 @@
         }
         _executeHandlers('add');
         return objects;
-    };
+      };
 
     // Add object to collection no matter what.
     ns.addForce = function(collection, newData){
@@ -174,7 +166,7 @@
     // Creates a new collection if it doesn't already exsist.
     ns.create = function(collection, objectData){
         if (objectData) {
-            ns.addForce(collection, objectData);
+            localStorage.setItem(collection, JSON.stringify(objectData));
         } else {
             localStorage.setItem(collection, '[]');
         }
